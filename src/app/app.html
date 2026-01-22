@@ -1,0 +1,178 @@
+<div class="app-shell">
+  <header class="site-header">
+    <div class="container header-row">
+      <div class="logo">Ecom<span>Hub</span></div>
+      <nav class="nav">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+        <a routerLink="/shop" routerLinkActive="active">Shop</a>
+        <a routerLink="/product/1" routerLinkActive="active">Product</a>
+        <a routerLink="/contact" routerLinkActive="active">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search">
+          <input type="text" placeholder="Search products..." />
+          <span class="search-icon">⌕</span>
+        </div>
+        <button class="icon-btn" aria-label="Wishlist">♡</button>
+        <button class="icon-btn" aria-label="Cart">🛍</button>
+        <ng-container *ngIf="user$ | async as user; else authButtons">
+          <div class="user-pill">
+            <span>{{ user.username }}</span>
+            <span class="role">{{ user.role }}</span>
+          </div>
+          <button class="btn ghost" (click)="logout()">Sign out</button>
+        </ng-container>
+        <ng-template #authButtons>
+          <button class="btn ghost" (click)="openAuth('register')">Register</button>
+          <button class="btn primary" (click)="openAuth('login')">Sign in</button>
+        </ng-template>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <router-outlet />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo footer-logo">Ecom<span>Hub</span></div>
+        <p class="muted">
+          Curated e-commerce essentials inspired by modern design. Build your store
+          with style and clarity.
+        </p>
+        <div class="socials">
+          <span>Instagram</span>
+          <span>Twitter</span>
+          <span>Dribbble</span>
+        </div>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li>New arrivals</li>
+          <li>Best sellers</li>
+          <li>Accessories</li>
+          <li>Gift cards</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li>About us</li>
+          <li>Careers</li>
+          <li>Press</li>
+          <li>Contact</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Newsletter</h4>
+        <p class="muted">Get updates on launches, promos, and early access.</p>
+        <div class="newsletter">
+          <input type="email" placeholder="Email address" />
+          <button class="btn dark">Join</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 EcomHub. All rights reserved.</span>
+      <span>Privacy • Terms</span>
+    </div>
+  </footer>
+</div>
+
+<div class="modal-backdrop" *ngIf="isAuthOpen()">
+  <div class="auth-modal">
+    <div class="auth-header">
+      <h3>{{ authTab() === 'login' ? 'Welcome back' : 'Create your account' }}</h3>
+      <button class="icon-btn" (click)="closeAuth()" aria-label="Close">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <button
+        class="tab"
+        [ngClass]="{ active: authTab() === 'login' }"
+        (click)="openAuth('login')"
+      >
+        Sign in
+      </button>
+      <button
+        class="tab"
+        [ngClass]="{ active: authTab() === 'register' }"
+        (click)="openAuth('register')"
+      >
+        Register
+      </button>
+    </div>
+    <form
+      class="auth-form"
+      *ngIf="authTab() === 'login'; else registerFormTpl"
+      [formGroup]="loginForm"
+      (ngSubmit)="submitLogin()"
+    >
+      <label>
+        Username
+        <input type="text" placeholder="mor_2314" formControlName="username" />
+      </label>
+      <label>
+        Password
+        <input type="password" placeholder="83r5^_" formControlName="password" />
+      </label>
+      <div class="auth-actions">
+        <button class="btn primary" type="submit" [disabled]="isAuthLoading()">
+          {{ isAuthLoading() ? 'Signing in...' : 'Sign in' }}
+        </button>
+        <button class="btn ghost" type="button" (click)="openAuth('register')">
+          Create account
+        </button>
+      </div>
+      <p class="muted small">
+        Demo login: <strong>mor_2314 / 83r5^_</strong>
+      </p>
+    </form>
+
+    <ng-template #registerFormTpl>
+      <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+        <label>
+          First name
+          <input type="text" placeholder="Jane" formControlName="firstname" />
+        </label>
+        <label>
+          Last name
+          <input type="text" placeholder="Doe" formControlName="lastname" />
+        </label>
+        <label>
+          Email
+          <input type="email" placeholder="you@email.com" formControlName="email" />
+        </label>
+        <label>
+          Username
+          <input type="text" placeholder="jane_doe" formControlName="username" />
+        </label>
+        <label>
+          Password
+          <input type="password" placeholder="••••••••" formControlName="password" />
+        </label>
+        <label>
+          Role
+          <select formControlName="role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+        <div class="auth-actions">
+          <button class="btn primary" type="submit" [disabled]="isAuthLoading()">
+            {{ isAuthLoading() ? 'Creating...' : 'Create account' }}
+          </button>
+          <button class="btn ghost" type="button" (click)="openAuth('login')">
+            Back to sign in
+          </button>
+        </div>
+      </form>
+    </ng-template>
+    <p class="muted small" *ngIf="authMessage()">{{ authMessage() }}</p>
+    <p class="muted small">
+      By continuing you agree to our terms and privacy policy.
+    </p>
+  </div>
+</div>
