@@ -72,7 +72,7 @@
       <div class="admin-panel" *ngIf="(user$ | async)?.role === 'admin'">
         <strong>Admin access</strong>
         <p>You can manage inventory and track orders.</p>
-        <button class="btn dark">Open dashboard</button>
+        <a class="btn dark" routerLink="/admin">Open dashboard</a>
       </div>
       <div class="grid-3" *ngIf="filteredProducts$ | async as products; else loadingTpl">
         <div class="card product-card" *ngFor="let product of products">

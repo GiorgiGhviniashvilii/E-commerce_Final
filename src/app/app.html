@@ -6,6 +6,13 @@
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
         <a routerLink="/shop" routerLinkActive="active">Shop</a>
         <a routerLink="/contact" routerLinkActive="active">Cart</a>
+        <a
+          routerLink="/admin"
+          routerLinkActive="active"
+          *ngIf="(user$ | async)?.role === 'admin'"
+        >
+          Admin
+        </a>
       </nav>
       <div class="header-actions">
         <div class="search">
@@ -48,6 +55,21 @@
     <router-outlet />
   </main>
 
+  <section class="newsletter-banner">
+    <div class="container newsletter-inner">
+      <div>
+        <h3>Stay up to date about our latest offers</h3>
+        <p class="muted">
+          Join our newsletter for new arrivals, promos, and exclusive drops.
+        </p>
+      </div>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Enter your email address" />
+        <button class="btn ghost">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
@@ -81,12 +103,13 @@
         </ul>
       </div>
       <div>
-        <h4>Newsletter</h4>
-        <p class="muted">Get updates on launches, promos, and early access.</p>
-        <div class="newsletter">
-          <input type="email" placeholder="Email address" />
-          <button class="btn dark">Join</button>
-        </div>
+        <h4>Help</h4>
+        <ul>
+          <li>Customer support</li>
+          <li>Delivery details</li>
+          <li>Terms & conditions</li>
+          <li>Privacy policy</li>
+        </ul>
       </div>
     </div>
     <div class="footer-bottom">
@@ -125,8 +148,12 @@
       (ngSubmit)="submitLogin()"
     >
       <label>
-        Email
-        <input type="email" placeholder="you@email.com" formControlName="email" />
+        Email or username
+        <input
+          type="text"
+          placeholder="you@email.com or username"
+          formControlName="email"
+        />
       </label>
       <span class="field-error" *ngIf="getLoginError('email')">
         {{ getLoginError('email') }}

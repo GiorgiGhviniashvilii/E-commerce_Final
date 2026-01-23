@@ -6,7 +6,7 @@
 
 .site-header {
   background: #ffffff;
-  border-bottom: 1px solid #ececec;
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -21,13 +21,13 @@
 }
 
 .logo {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 24px;
   letter-spacing: 0.5px;
-  color: #111111;
+  color: var(--text);
 
   span {
-    color: #ff8a5b;
+    color: var(--text);
   }
 }
 
@@ -37,14 +37,14 @@
   font-weight: 500;
 
   a {
-    color: #444444;
+    color: #6b6b6b;
     text-decoration: none;
     padding: 6px 0;
     border-bottom: 2px solid transparent;
 
     &.active {
-      color: #111111;
-      border-color: #ff8a5b;
+      color: var(--text);
+      border-color: var(--text);
     }
   }
 }
@@ -61,7 +61,7 @@
   gap: 8px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #f2f2f2;
+  background: #f5f5f5;
   font-size: 12px;
   text-transform: capitalize;
 
@@ -72,7 +72,7 @@
   .role {
     padding: 2px 8px;
     border-radius: 999px;
-    background: #111111;
+    background: var(--text);
     color: #ffffff;
     font-size: 10px;
     text-transform: uppercase;
@@ -83,12 +83,12 @@
   position: relative;
 
   input {
-    width: 240px;
-    height: 40px;
-    padding: 0 40px 0 14px;
+    width: 260px;
+    height: 44px;
+    padding: 0 40px 0 16px;
     border-radius: 999px;
-    border: 1px solid #e0e0e0;
-    background: #fafafa;
+    border: 1px solid var(--border);
+    background: #f6f6f6;
   }
 
   .search-icon {
@@ -96,7 +96,7 @@
     right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999999;
+    color: #8b8b8b;
   }
 }
 
@@ -104,7 +104,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid #ececec;
+  border: 1px solid var(--border);
   background: #ffffff;
   font-size: 16px;
   cursor: pointer;
@@ -118,7 +118,7 @@
   position: absolute;
   top: -6px;
   right: -6px;
-  background: #ff8a5b;
+  background: var(--text);
   color: #ffffff;
   border-radius: 999px;
   font-size: 10px;
@@ -134,13 +134,59 @@
 
 .page-content {
   flex: 1;
-  background: #f8f7f4;
+  background: var(--bg);
+}
+
+.newsletter-banner {
+  background: #111111;
+  color: #ffffff;
+  padding: 48px 0;
+}
+
+.newsletter-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .muted {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 12px;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 999px;
+  align-items: center;
+
+  input {
+    width: 260px;
+    height: 40px;
+    border: none;
+    outline: none;
+  }
+
+  .btn {
+    height: 40px;
+    border-radius: 999px;
+    border-color: #111111;
+  }
 }
 
 .site-footer {
-  background: #111111;
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
   padding: 48px 0 24px;
+  border-top: 1px solid var(--border);
 }
 
 .footer-grid {
@@ -150,7 +196,7 @@
 }
 
 .footer-logo {
-  color: #ffffff;
+  color: #111111;
 }
 
 .site-footer h4 {
@@ -164,33 +210,20 @@
 
   li {
     margin-bottom: 8px;
-    color: #cfcfcf;
+    color: #6b6b6b;
   }
 }
 
 .socials {
   display: flex;
   gap: 12px;
-  color: #cfcfcf;
+  color: #6b6b6b;
   font-size: 14px;
-}
-
-.newsletter {
-  display: flex;
-  gap: 10px;
-
-  input {
-    flex: 1;
-    height: 44px;
-    border-radius: 8px;
-    border: none;
-    padding: 0 12px;
-  }
 }
 
 .footer-bottom {
   margin-top: 32px;
-  border-top: 1px solid #2b2b2b;
+  border-top: 1px solid var(--border);
   padding-top: 16px;
   display: flex;
   justify-content: space-between;

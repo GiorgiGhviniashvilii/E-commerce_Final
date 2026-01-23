@@ -12,12 +12,13 @@
 .main-image {
   height: 420px;
   border-radius: 24px;
-  background: linear-gradient(140deg, #ffe2d2, #ffd1bb);
+  background: #f7f7f7;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   position: relative;
+  border: 1px solid var(--border);
 
   img {
     width: 100%;
@@ -34,7 +35,8 @@
   position: absolute;
   left: 16px;
   top: 16px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #ffffff;
+  border: 1px solid var(--border);
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 11px;
@@ -50,16 +52,17 @@
 .thumb {
   height: 100px;
   border-radius: 14px;
-  background: linear-gradient(140deg, #f4f4f4, #ffffff);
+  background: #f7f7f7;
 }
 
 .thumb.alt {
-  background: linear-gradient(140deg, #e8ecff, #cfd7ff);
+  background: #f7f7f7;
 }
 
 .product-details h1 {
   margin: 12px 0;
   font-size: 36px;
+  letter-spacing: -0.02em;
 }
 
 .price {
@@ -72,7 +75,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #666666;
+  color: var(--muted);
   margin-bottom: 10px;
 }
 
@@ -92,15 +95,15 @@
 }
 
 .star.filled {
-  color: #ffb347;
+  color: #ffc633;
 }
 
 .rating-count {
-  color: #999999;
+  color: #9a9a9a;
 }
 
 .description {
-  color: #6d6d6d;
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -123,12 +126,12 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #ffceb6;
-  border: 1px solid #f0f0f0;
+  background: #d8d8d8;
+  border: 1px solid var(--border);
 }
 
 .swatch.alt {
-  background: #e3d6c8;
+  background: #bfa78b;
 }
 
 .swatch.dark {
@@ -139,7 +142,7 @@
   display: inline-flex;
   gap: 12px;
   align-items: center;
-  background: #f7f7f7;
+  background: #f2f0f1;
   padding: 8px 16px;
   border-radius: 999px;
 
@@ -157,7 +160,7 @@
   margin-bottom: 24px;
 
   .btn.ghost.active {
-    background: #ffe3d6;
+    background: #f2f0f1;
     color: #111111;
   }
 }
@@ -169,7 +172,7 @@
 
   p {
     margin: 4px 0 0;
-    color: #777777;
+    color: var(--muted);
   }
 }
 
@@ -203,7 +206,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #ffe3d6;
+  background: #f2f0f1;
   color: #111111;
   font-weight: 700;
   display: inline-flex;
@@ -213,7 +216,7 @@
 
 .review-body {
   margin: 0;
-  color: #666666;
+  color: var(--muted);
   line-height: 1.6;
 }
 

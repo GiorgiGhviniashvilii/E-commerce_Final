@@ -5,14 +5,14 @@ import {
   Observable,
   defer,
   map,
-  of,
+  switchMap,
   tap,
   throwError,
 } from 'rxjs';
 import { AuthUser, UserRole } from '../models/auth-user';
 
 interface LoginResponse {
-  token: string;
+  access_token: string;
 }
 
 interface RegisterPayload {
@@ -31,7 +31,7 @@ interface RegisteredUser extends RegisterPayload {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'https://fakestoreapi.com';
+  private readonly apiUrl = 'https://api.escuelajs.co/api/v1';
   private readonly storageKey = 'ecommerce_auth_user';
   private readonly rolesKey = 'ecommerce_user_roles';
   private readonly registeredUsersKey = 'ecommerce_registered_users';
@@ -45,26 +45,31 @@ export class AuthService {
 
   login(email: string, password: string): Observable<AuthUser> {
     return defer(() => {
-      const normalizedEmail = email.trim().toLowerCase();
-      if (!this.isEmailValid(normalizedEmail)) {
-        return throwError(() => new Error('Enter a valid email.'));
+      const normalizedInput = email.trim().toLowerCase();
+      const loginEmail = this.resolveLoginEmail(normalizedInput);
+      if (!loginEmail) {
+        return throwError(() => new Error('Enter a valid email or username.'));
       }
 
-      const registeredUser = this.getRegisteredUserByEmail(normalizedEmail);
-      if (!registeredUser) {
-        return throwError(() => new Error('No account found for this email.'));
-      }
-      if (registeredUser.password !== password) {
-        return throwError(() => new Error('Invalid credentials'));
-      }
-
-      const user: AuthUser = {
-        username: registeredUser.username,
-        role: registeredUser.role,
-        token: this.createFakeJwt(registeredUser.username),
-      };
-      this.setUser(user);
-      return of(user);
+      return this.http
+        .post<LoginResponse>(`${this.apiUrl}/auth/login`, {
+          email: loginEmail,
+          password,
+        })
+        .pipe(
+          map((response) => {
+            const username =
+              this.getRegisteredUserByEmail(loginEmail)?.username ??
+              loginEmail.split('@')[0];
+            const role = this.getRoleForUsername(username);
+            return {
+              username,
+              role,
+              token: response.access_token,
+            };
+          }),
+          tap((user) => this.setUser(user))
+        );
     });
   }
 
@@ -91,12 +96,25 @@ export class AuthService {
       return throwError(() => new Error('Username is already taken'));
     }
 
-    const users = this.loadRegisteredUsers();
-    users[normalizedPayload.email] = { ...normalizedPayload, role };
-    localStorage.setItem(this.registeredUsersKey, JSON.stringify(users));
-    this.setRoleForUsername(normalizedPayload.username, role);
+    const apiPayload = {
+      name: `${normalizedPayload.name.firstname} ${normalizedPayload.name.lastname}`.trim(),
+      email: normalizedPayload.email,
+      password: normalizedPayload.password,
+      avatar: 'https://i.pravatar.cc/300',
+    };
 
-    return of({ success: true });
+    return this.http.post(`${this.apiUrl}/users/`, apiPayload).pipe(
+      tap(() => {
+        const users = this.loadRegisteredUsers();
+        users[normalizedPayload.email] = { ...normalizedPayload, role };
+        localStorage.setItem(this.registeredUsersKey, JSON.stringify(users));
+        this.setRoleForUsername(normalizedPayload.username, role);
+      }),
+      switchMap(() =>
+        this.login(normalizedPayload.email, normalizedPayload.password)
+      ),
+      map(() => ({ success: true }))
+    );
   }
 
   logout(): void {
@@ -136,7 +154,7 @@ export class AuthService {
     if (roles[username]) {
       return roles[username];
     }
-    return username.toLowerCase().includes('admin') ? 'admin' : 'user';
+    return 'user';
   }
 
   private setRoleForUsername(username: string, role: UserRole): void {
@@ -157,7 +175,7 @@ export class AuthService {
 
   private getRegisteredUser(username: string): RegisteredUser | null {
     const users = this.loadRegisteredUsers();
-    return users[username] ?? null;
+    return Object.values(users).find((user) => user.username === username) ?? null;
   }
 
   private getRegisteredUserByEmail(email: string): RegisteredUser | null {
@@ -175,27 +193,10 @@ export class AuthService {
     return Object.values(users).some((user) => user.username === username);
   }
 
-  private createFakeJwt(username: string): string {
-    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const now = Math.floor(Date.now() / 1000);
-    const payload = btoa(
-      JSON.stringify({
-        sub: username,
-        iat: now,
-        exp: now + 60 * 60,
-      })
-    );
-    const signature = btoa('local-demo');
-    return `${header}.${payload}.${signature}`;
-  }
-
   private isTokenValid(token: string): boolean {
-    if (!token.includes('.')) {
-      return true;
-    }
     const payload = this.decodeToken(token);
     if (!payload?.exp) {
-      return false;
+      return true;
     }
     return Math.floor(Date.now() / 1000) < payload.exp;
   }
@@ -238,5 +239,15 @@ export class AuthService {
 
   private isPasswordStrong(password: string): boolean {
     return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
+  }
+
+  private resolveLoginEmail(identifier: string): string | null {
+    if (this.isEmailValid(identifier)) {
+      return identifier;
+    }
+    if (identifier.length >= 3) {
+      return this.getRegisteredUser(identifier)?.email ?? null;
+    }
+    return null;
   }
 }

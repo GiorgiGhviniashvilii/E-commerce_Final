@@ -56,7 +56,7 @@ export class App {
       map((cart) => Object.values(cart.items).reduce((sum, qty) => sum + qty, 0))
     );
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, emailOrUsernameValidator()]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
 
@@ -208,8 +208,8 @@ export class App {
     if (control.errors['required']) {
       return 'This field is required.';
     }
-    if (control.errors['email']) {
-      return 'Enter a valid email.';
+    if (control.errors['emailOrUsernameInvalid']) {
+      return 'Enter a valid email or username.';
     }
     if (control.errors['minlength']) {
       return 'Enter at least 8 characters.';
@@ -282,6 +282,18 @@ function usernameValidator(): ValidatorFn {
       return null;
     }
     return /^[a-zA-Z0-9_]+$/.test(value) ? null : { usernameInvalid: true };
+  };
+}
+
+function emailOrUsernameValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = String(control.value ?? '').trim();
+    if (value.length === 0) {
+      return null;
+    }
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    const isUsername = /^[a-zA-Z0-9_]+$/.test(value);
+    return isEmail || isUsername ? null : { emailOrUsernameInvalid: true };
   };
 }
 
