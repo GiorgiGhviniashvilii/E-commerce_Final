@@ -46,6 +46,18 @@ export class StoreService {
     localStorage.setItem(this.cartKey, JSON.stringify(cart));
   }
 
+  toggleCartItem(productId: number): void {
+    if (this.isInCart(productId)) {
+      this.removeItemFromCart(productId);
+      return;
+    }
+    this.addToCart(productId);
+  }
+
+  isInCart(productId: number): boolean {
+    return Boolean(this.cartSubject.value.items[productId]);
+  }
+
   removeFromCart(productId: number): void {
     const cart = { ...this.cartSubject.value };
     cart.items = { ...cart.items };

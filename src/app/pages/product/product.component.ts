@@ -77,8 +77,8 @@ export class ProductComponent {
     );
   }
 
-  addToCart(productId: number): void {
-    this.storeService.addToCart(productId);
+  toggleCart(productId: number): void {
+    this.storeService.toggleCartItem(productId);
   }
 
   toggleFavorite(productId: number): void {
@@ -87,6 +87,10 @@ export class ProductComponent {
 
   isFavorite(productId: number): boolean {
     return this.storeService.isFavorite(productId);
+  }
+
+  isInCart(productId: number): boolean {
+    return this.storeService.isInCart(productId);
   }
 
   getStars(rate: number): number[] {

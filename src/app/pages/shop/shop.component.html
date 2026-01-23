@@ -109,9 +109,9 @@
             <button
               class="btn dark"
               type="button"
-              (click)="addToCart(product.id)"
+              (click)="toggleCart(product.id)"
             >
-              Add to cart
+              {{ isInCart(product.id) ? 'Remove from cart' : 'Add to cart' }}
             </button>
           </div>
         </div>

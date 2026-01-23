@@ -42,8 +42,8 @@
         </div>
       </div>
       <div class="actions">
-        <button class="btn primary" (click)="addToCart(product.id)">
-          Add to cart
+        <button class="btn primary" (click)="toggleCart(product.id)">
+          {{ isInCart(product.id) ? 'Remove from cart' : 'Add to cart' }}
         </button>
         <button
           class="btn ghost favorite-btn"
