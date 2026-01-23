@@ -173,6 +173,8 @@ export class App {
 
   logout(): void {
     this.authService.logout();
+    this.storeService.clearStore();
+    this.router.navigate(['/']);
   }
 
   updateHeaderSearch(event: Event): void {

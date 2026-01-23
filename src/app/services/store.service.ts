@@ -96,6 +96,14 @@ export class StoreService {
     this.searchSubject.next(term);
   }
 
+  clearStore(): void {
+    this.favoritesSubject.next([]);
+    this.cartSubject.next({ items: {} });
+    this.searchSubject.next('');
+    localStorage.removeItem(this.favoritesKey);
+    localStorage.removeItem(this.cartKey);
+  }
+
   private loadFavorites(): number[] {
     const raw = localStorage.getItem(this.favoritesKey);
     return raw ? (JSON.parse(raw) as number[]) : [];
