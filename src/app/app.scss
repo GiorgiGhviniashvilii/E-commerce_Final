@@ -256,6 +256,21 @@
   margin-bottom: 16px;
 }
 
+.auth-header .icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #f6f6f6;
+  font-size: 16px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.auth-header .icon-btn:hover {
+  background: #efefef;
+  transform: scale(1.05);
+}
+
 .auth-tabs {
   display: flex;
   gap: 10px;

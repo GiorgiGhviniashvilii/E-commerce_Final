@@ -140,9 +140,27 @@
   justify-content: space-between;
   align-items: center;
 
-  .icon-btn.active {
-    background: #f2f0f1;
+  .favorite-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    font-size: 16px;
+    color: #9a9a9a;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  }
+
+  .favorite-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    color: #111111;
+  }
+
+  .favorite-btn.active {
+    background: #111111;
     border-color: #111111;
+    color: #ffffff;
   }
 }
 

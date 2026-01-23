@@ -100,10 +100,20 @@
 }
 
 .remove-btn {
-  width: 32px;
-  height: 32px;
-  font-size: 14px;
-  border-color: var(--border);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  font-size: 18px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.remove-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  color: #111111;
 }
 
 .cart-summary {
@@ -187,4 +197,5 @@
   .remove-btn {
     justify-self: end;
   }
+
 }

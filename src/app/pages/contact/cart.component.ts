@@ -7,13 +7,13 @@ import { StoreService } from '../../services/store.service';
 import { Product } from '../../models/product';
 
 @Component({
-  selector: 'app-contact',
+  selector: 'app-cart',
   standalone: true,
   imports: [NgIf, NgFor, AsyncPipe, CurrencyPipe, RouterLink],
-  templateUrl: './contact.component.html',
-  styleUrl: './contact.component.scss',
+  templateUrl: './cart.component.html',
+  styleUrl: './cart.component.scss',
 })
-export class ContactComponent {
+export class CartComponent {
   protected readonly cartItems$: Observable<CartLineItem[]>;
   protected readonly subtotal$: Observable<number>;
   protected readonly discount$: Observable<number>;
