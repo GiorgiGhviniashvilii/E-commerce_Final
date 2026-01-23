@@ -1,229 +1,102 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { map, Observable, switchMap } from 'rxjs';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product';
+import { StoreService } from '../../services/store.service';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [RouterLink, AsyncPipe, NgIf],
-  template: `
-    <section class="section" *ngIf="product$ | async as product; else loadingTpl">
-      <div class="container product-layout">
-        <div class="product-gallery">
-          <div class="main-image">
-            <img [src]="product.image" [alt]="product.title" />
-          </div>
-          <div class="thumbs">
-            <div class="thumb"></div>
-            <div class="thumb alt"></div>
-            <div class="thumb"></div>
-          </div>
-        </div>
-        <div class="product-details">
-          <span class="pill">SKU {{ product.id }}</span>
-          <h1>{{ product.title }}</h1>
-          <p class="price">$ {{ product.price }}</p>
-          <p class="description">{{ product.description }}</p>
-          <div class="options">
-            <div>
-              <h4>Color</h4>
-              <div class="swatches">
-                <span class="swatch"></span>
-                <span class="swatch alt"></span>
-                <span class="swatch dark"></span>
-              </div>
-            </div>
-            <div>
-              <h4>Quantity</h4>
-              <div class="qty">
-                <button>-</button>
-                <span>1</span>
-                <button>+</button>
-              </div>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn primary">Add to cart</button>
-            <button class="btn ghost">Add to wishlist</button>
-          </div>
-          <div class="shipping">
-            <div>
-              <strong>Free shipping</strong>
-              <p>Orders over $150 qualify for next-day delivery.</p>
-            </div>
-            <div>
-              <strong>Easy returns</strong>
-              <p>30-day return policy on all items.</p>
-            </div>
-          </div>
-          <a routerLink="/shop" class="pill link">Back to shop</a>
-        </div>
-      </div>
-    </section>
-    <ng-template #loadingTpl>
-      <section class="section">
-        <div class="container product-layout">
-          <div class="product-gallery">
-            <div class="main-image loading"></div>
-          </div>
-          <div class="product-details">
-            <span class="pill">Loading...</span>
-            <h1>Loading product</h1>
-            <p class="price">--</p>
-            <p class="description">Fetching product details.</p>
-          </div>
-        </div>
-      </section>
-    </ng-template>
-  `,
-  styles: [
-    `
-      .product-layout {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 40px;
-      }
-
-      .product-gallery {
-        display: grid;
-        gap: 20px;
-      }
-
-      .main-image {
-        height: 420px;
-        border-radius: 24px;
-        background: linear-gradient(140deg, #ffe2d2, #ffd1bb);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-
-      .main-image.loading {
-        opacity: 0.5;
-      }
-
-      .thumbs {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-      }
-
-      .thumb {
-        height: 100px;
-        border-radius: 14px;
-        background: linear-gradient(140deg, #f4f4f4, #ffffff);
-      }
-
-      .thumb.alt {
-        background: linear-gradient(140deg, #e8ecff, #cfd7ff);
-      }
-
-      .product-details h1 {
-        margin: 12px 0;
-        font-size: 36px;
-      }
-
-      .price {
-        font-size: 22px;
-        font-weight: 700;
-      }
-
-      .description {
-        color: #6d6d6d;
-        line-height: 1.6;
-      }
-
-      .options {
-        display: grid;
-        gap: 16px;
-        margin: 24px 0;
-
-        h4 {
-          margin: 0 0 10px;
-        }
-      }
-
-      .swatches {
-        display: flex;
-        gap: 10px;
-      }
-
-      .swatch {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: #ffceb6;
-        border: 1px solid #f0f0f0;
-      }
-
-      .swatch.alt {
-        background: #e3d6c8;
-      }
-
-      .swatch.dark {
-        background: #3b3b3b;
-      }
-
-      .qty {
-        display: inline-flex;
-        gap: 12px;
-        align-items: center;
-        background: #f7f7f7;
-        padding: 8px 16px;
-        border-radius: 999px;
-
-        button {
-          border: none;
-          background: transparent;
-          font-size: 18px;
-          cursor: pointer;
-        }
-      }
-
-      .actions {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 24px;
-      }
-
-      .shipping {
-        display: grid;
-        gap: 12px;
-        margin-bottom: 20px;
-
-        p {
-          margin: 4px 0 0;
-          color: #777777;
-        }
-      }
-
-      .link {
-        text-decoration: none;
-        color: #111111;
-      }
-    `,
-  ],
+  imports: [RouterLink, AsyncPipe, NgIf, NgFor],
+  templateUrl: './product.component.html',
+  styleUrl: './product.component.scss',
 })
 export class ProductComponent {
   protected readonly product$: Observable<Product>;
+  protected readonly reviews: Review[] = [
+    {
+      name: 'Chloe D.',
+      rating: 5,
+      body: 'Fits perfectly and the material feels premium. Love it!',
+      date: '1 week ago',
+    },
+    {
+      name: 'Marcus L.',
+      rating: 4,
+      body: 'Great quality for the price. Color is spot on.',
+      date: '2 weeks ago',
+    },
+    {
+      name: 'Elena V.',
+      rating: 5,
+      body: 'Super comfortable and fast delivery. Highly recommend.',
+      date: '3 weeks ago',
+    },
+    {
+      name: 'Amelia R.',
+      rating: 5,
+      body: 'Every item feels premium and the delivery was fast. Will shop again.',
+      date: '1 week ago',
+    },
+    {
+      name: 'Jordan K.',
+      rating: 4,
+      body: 'Great materials and the colors match the photos perfectly.',
+      date: '2 weeks ago',
+    },
+    {
+      name: 'Priya S.',
+      rating: 5,
+      body: 'Customer support helped me choose the right size. Super easy.',
+      date: '3 weeks ago',
+    },
+    {
+      name: 'Leo M.',
+      rating: 4,
+      body: 'Nice fit and fabric. The packaging was a nice touch too.',
+      date: '4 weeks ago',
+    },
+    {
+      name: 'Nina P.',
+      rating: 5,
+      body: 'Arrived in two days and looks even better in person.',
+      date: '1 month ago',
+    },
+  ];
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly productService: ProductService
+    private readonly productService: ProductService,
+    private readonly storeService: StoreService
   ) {
     this.product$ = this.route.paramMap.pipe(
       map((params) => Number(params.get('id') ?? 1)),
       switchMap((id) => this.productService.getProductById(id))
     );
   }
+
+  addToCart(productId: number): void {
+    this.storeService.addToCart(productId);
+  }
+
+  toggleFavorite(productId: number): void {
+    this.storeService.toggleFavorite(productId);
+  }
+
+  isFavorite(productId: number): boolean {
+    return this.storeService.isFavorite(productId);
+  }
+
+  getStars(rate: number): number[] {
+    return [1, 2, 3, 4, 5];
+  }
+}
+
+interface Review {
+  name: string;
+  rating: number;
+  body: string;
+  date: string;
 }

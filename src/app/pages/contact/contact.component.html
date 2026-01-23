@@ -1,0 +1,85 @@
+<section class="section cart-page">
+  <div class="container">
+    <div class="cart-header">
+      <span class="badge">Cart</span>
+      <h1>Your cart</h1>
+      <p>Review items before checkout.</p>
+    </div>
+
+    <div class="cart-grid" *ngIf="cartItems$ | async as items">
+      <ng-container *ngIf="items.length; else emptyTpl">
+        <div class="cart-items card">
+          <div class="cart-item" *ngFor="let item of items">
+            <div class="item-thumb">
+              <img [src]="item.product.image" [alt]="item.product.title" />
+            </div>
+            <div class="item-info">
+              <h4>{{ item.product.title }}</h4>
+              <p class="item-category">{{ item.product.category }}</p>
+              <p class="item-price">{{ item.product.price | currency: 'USD' }}</p>
+            </div>
+            <div class="item-qty">
+              <button
+                class="qty-btn"
+                type="button"
+                (click)="decrease(item.product.id)"
+                aria-label="Decrease quantity"
+              >
+                -
+              </button>
+              <span>{{ item.quantity }}</span>
+              <button
+                class="qty-btn"
+                type="button"
+                (click)="increase(item.product.id)"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+            <div class="item-total">{{ item.subtotal | currency: 'USD' }}</div>
+            <button
+              class="icon-btn remove-btn"
+              type="button"
+              (click)="remove(item.product.id)"
+              aria-label="Remove item"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <aside class="cart-summary card">
+          <h3>Order summary</h3>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong>{{ subtotal$ | async | currency: 'USD' }}</strong>
+          </div>
+          <div class="summary-row discount">
+            <span>Discount (20%)</span>
+            <strong>-{{ discount$ | async | currency: 'USD' }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Delivery fee</span>
+            <strong>{{ deliveryFee | currency: 'USD' }}</strong>
+          </div>
+          <div class="summary-total">
+            <span>Total</span>
+            <strong>{{ total$ | async | currency: 'USD' }}</strong>
+          </div>
+          <button class="btn dark" type="button">Go to checkout</button>
+          <a routerLink="/shop" class="pill link">Continue shopping</a>
+        </aside>
+      </ng-container>
+      <ng-template #emptyTpl>
+        <div class="cart-empty card">
+          <h3>Your cart is empty</h3>
+          <p class="muted">
+            Browse the shop and add items to see them here.
+          </p>
+          <a routerLink="/shop" class="btn primary">Start shopping</a>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</section>

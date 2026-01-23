@@ -1,0 +1,112 @@
+<section class="section" *ngIf="product$ | async as product; else loadingTpl">
+  <div class="container product-layout">
+    <div class="product-gallery">
+      <div class="main-image">
+        <img [src]="product.image" [alt]="product.title" />
+        <span class="category-pill">{{ product.category }}</span>
+      </div>
+    </div>
+    <div class="product-details">
+      <span class="pill">SKU {{ product.id }}</span>
+      <h1>{{ product.title }}</h1>
+      <p class="price">$ {{ product.price }}</p>
+      <div class="rating" *ngIf="product.rating">
+        <span class="rating-value">{{ product.rating.rate }}</span>
+        <span class="stars">
+          <span
+            class="star"
+            *ngFor="let star of getStars(product.rating.rate)"
+            [class.filled]="star <= product.rating.rate"
+            >★</span
+          >
+        </span>
+        <span class="rating-count">({{ product.rating.count }})</span>
+      </div>
+      <p class="description">{{ product.description }}</p>
+      <div class="options">
+        <div>
+          <h4>Color</h4>
+          <div class="swatches">
+            <span class="swatch"></span>
+            <span class="swatch alt"></span>
+            <span class="swatch dark"></span>
+          </div>
+        </div>
+        <div>
+          <h4>Quantity</h4>
+          <div class="qty">
+            <button>-</button>
+            <span>1</span>
+            <button>+</button>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" (click)="addToCart(product.id)">
+          Add to cart
+        </button>
+        <button
+          class="btn ghost"
+          [class.active]="isFavorite(product.id)"
+          (click)="toggleFavorite(product.id)"
+        >
+          {{ isFavorite(product.id) ? 'Saved' : 'Add to wishlist' }}
+        </button>
+      </div>
+      <div class="shipping">
+        <div>
+          <strong>Free shipping</strong>
+          <p>Orders over $150 qualify for next-day delivery.</p>
+        </div>
+        <div>
+          <strong>Easy returns</strong>
+          <p>30-day return policy on all items.</p>
+        </div>
+      </div>
+      <a routerLink="/shop" class="pill link">Back to shop</a>
+    </div>
+  </div>
+</section>
+<section class="section reviews">
+  <div class="container">
+    <div class="section-header">
+      <h2>All reviews</h2>
+      <button class="btn ghost" type="button">Write a review</button>
+    </div>
+    <div class="review-list">
+      <div class="card review-card" *ngFor="let review of reviews">
+        <div class="review-head">
+          <div class="avatar">{{ review.name.charAt(0) }}</div>
+          <div>
+            <strong>{{ review.name }}</strong>
+          </div>
+        </div>
+        <div class="rating">
+          <span
+            class="star"
+            *ngFor="let star of getStars(review.rating)"
+            [class.filled]="star <= review.rating"
+            >★</span
+          >
+        </div>
+        <p class="review-body">{{ review.body }}</p>
+        <p class="muted small">Posted on {{ review.date }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<ng-template #loadingTpl>
+  <section class="section">
+    <div class="container product-layout">
+      <div class="product-gallery">
+        <div class="main-image loading"></div>
+      </div>
+      <div class="product-details">
+        <span class="pill">Loading...</span>
+        <h1>Loading product</h1>
+        <p class="price">--</p>
+        <p class="description">Fetching product details.</p>
+      </div>
+    </div>
+  </section>
+</ng-template>

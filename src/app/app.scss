@@ -65,6 +65,10 @@
   font-size: 12px;
   text-transform: capitalize;
 
+  .user-icon {
+    font-size: 14px;
+  }
+
   .role {
     padding: 2px 8px;
     border-radius: 999px;
@@ -104,6 +108,23 @@
   background: #ffffff;
   font-size: 16px;
   cursor: pointer;
+}
+
+.badge-btn {
+  position: relative;
+}
+
+.badge-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff8a5b;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 10px;
+  padding: 2px 6px;
+  min-width: 18px;
+  text-align: center;
 }
 
 .btn:disabled {
@@ -243,6 +264,17 @@
     border: 1px solid #e0e0e0;
     padding: 0 12px;
   }
+
+  input.ng-touched.ng-invalid,
+  select.ng-touched.ng-invalid {
+    border-color: #ff6b6b;
+  }
+}
+
+.field-error {
+  margin-top: -6px;
+  font-size: 12px;
+  color: #d93025;
 }
 
 .auth-actions {

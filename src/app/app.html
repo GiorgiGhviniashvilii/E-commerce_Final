@@ -5,18 +5,32 @@
       <nav class="nav">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
         <a routerLink="/shop" routerLinkActive="active">Shop</a>
-        <a routerLink="/product/1" routerLinkActive="active">Product</a>
-        <a routerLink="/contact" routerLinkActive="active">Contact</a>
+        <a routerLink="/contact" routerLinkActive="active">Cart</a>
       </nav>
       <div class="header-actions">
         <div class="search">
-          <input type="text" placeholder="Search products..." />
+          <input
+            type="text"
+            placeholder="Search products..."
+            (input)="updateHeaderSearch($event)"
+          />
           <span class="search-icon">⌕</span>
         </div>
-        <button class="icon-btn" aria-label="Wishlist">♡</button>
-        <button class="icon-btn" aria-label="Cart">🛍</button>
+        <button class="icon-btn badge-btn" aria-label="Wishlist">
+          ♡
+          <span class="badge-count" *ngIf="favoritesCount$ | async as count">
+            {{ count }}
+          </span>
+        </button>
+        <button class="icon-btn badge-btn" aria-label="Cart">
+          🛍
+          <span class="badge-count" *ngIf="cartCount$ | async as count">
+            {{ count }}
+          </span>
+        </button>
         <ng-container *ngIf="user$ | async as user; else authButtons">
           <div class="user-pill">
+            <span class="user-icon">👤</span>
             <span>{{ user.username }}</span>
             <span class="role">{{ user.role }}</span>
           </div>
@@ -111,13 +125,19 @@
       (ngSubmit)="submitLogin()"
     >
       <label>
-        Username
-        <input type="text" placeholder="mor_2314" formControlName="username" />
+        Email
+        <input type="email" placeholder="you@email.com" formControlName="email" />
       </label>
+      <span class="field-error" *ngIf="getLoginError('email')">
+        {{ getLoginError('email') }}
+      </span>
       <label>
         Password
-        <input type="password" placeholder="83r5^_" formControlName="password" />
+        <input type="password" placeholder="password" formControlName="password" />
       </label>
+      <span class="field-error" *ngIf="getLoginError('password')">
+        {{ getLoginError('password') }}
+      </span>
       <div class="auth-actions">
         <button class="btn primary" type="submit" [disabled]="isAuthLoading()">
           {{ isAuthLoading() ? 'Signing in...' : 'Sign in' }}
@@ -127,7 +147,7 @@
         </button>
       </div>
       <p class="muted small">
-        Demo login: <strong>mor_2314 / 83r5^_</strong>
+        Use the email you registered with to sign in.
       </p>
     </form>
 
@@ -135,24 +155,49 @@
       <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
         <label>
           First name
-          <input type="text" placeholder="Jane" formControlName="firstname" />
+          <input type="text" placeholder="firstname" formControlName="firstname" />
         </label>
+        <span class="field-error" *ngIf="getRegisterError('firstname')">
+          {{ getRegisterError('firstname') }}
+        </span>
         <label>
           Last name
-          <input type="text" placeholder="Doe" formControlName="lastname" />
+          <input type="text" placeholder="lastname" formControlName="lastname" />
         </label>
+        <span class="field-error" *ngIf="getRegisterError('lastname')">
+          {{ getRegisterError('lastname') }}
+        </span>
         <label>
           Email
           <input type="email" placeholder="you@email.com" formControlName="email" />
         </label>
+        <span class="field-error" *ngIf="getRegisterError('email')">
+          {{ getRegisterError('email') }}
+        </span>
         <label>
           Username
-          <input type="text" placeholder="jane_doe" formControlName="username" />
+          <input type="text" placeholder="username" formControlName="username" />
         </label>
+        <span class="field-error" *ngIf="getRegisterError('username')">
+          {{ getRegisterError('username') }}
+        </span>
         <label>
           Password
-          <input type="password" placeholder="••••••••" formControlName="password" />
+          <input type="password" placeholder="password" formControlName="password" />
         </label>
+        <span class="field-error" *ngIf="getRegisterError('password')">
+          {{ getRegisterError('password') }}
+        </span>
+        <label>
+          Confirm password
+          <input type="password" placeholder="confirm password" formControlName="confirmPassword" />
+        </label>
+        <span class="field-error" *ngIf="getRegisterError('confirmPassword')">
+          {{ getRegisterError('confirmPassword') }}
+        </span>
+        <span class="field-error" *ngIf="getPasswordMismatchError()">
+          {{ getPasswordMismatchError() }}
+        </span>
         <label>
           Role
           <select formControlName="role">

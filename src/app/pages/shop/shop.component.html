@@ -1,0 +1,131 @@
+<section class="shop-hero">
+  <div class="container">
+    <span class="badge">Shop</span>
+    <h1>Curated essentials for modern living</h1>
+    <p>Browse our full collection of furniture, decor, and lifestyle pieces.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container shop-grid">
+    <aside class="filters">
+      <h3>Filters</h3>
+      <div class="filter-group">
+        <h4>Category</h4>
+        <label *ngFor="let category of categories$ | async">
+          <input
+            type="checkbox"
+            [checked]="isCategorySelected(category)"
+            (change)="toggleCategory(category)"
+          />
+          {{ category }}
+        </label>
+      </div>
+      <div class="filter-group">
+        <h4>Price</h4>
+        <label>
+          <input
+            type="radio"
+            name="price"
+            [checked]="priceFilter === null"
+            (change)="setPriceFilter(null)"
+          />
+          Any price
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="price"
+            [checked]="priceFilter === 'under-50'"
+            (change)="setPriceFilter('under-50')"
+          />
+          Under $50
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="price"
+            [checked]="priceFilter === '50-150'"
+            (change)="setPriceFilter('50-150')"
+          />
+          $50 - $150
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="price"
+            [checked]="priceFilter === '150-300'"
+            (change)="setPriceFilter('150-300')"
+          />
+          $150 - $300
+        </label>
+      </div>
+      <button class="btn dark" (click)="resetFilters()">Reset filters</button>
+    </aside>
+    <div class="products">
+      <div class="products-header">
+        <h2>All products</h2>
+        <div class="pill" *ngIf="filteredProducts$ | async as products">
+          {{ products.length }} items
+        </div>
+      </div>
+      <div class="admin-panel" *ngIf="(user$ | async)?.role === 'admin'">
+        <strong>Admin access</strong>
+        <p>You can manage inventory and track orders.</p>
+        <button class="btn dark">Open dashboard</button>
+      </div>
+      <div class="grid-3" *ngIf="filteredProducts$ | async as products; else loadingTpl">
+        <div class="card product-card" *ngFor="let product of products">
+          <div class="product-thumb" [routerLink]="['/product', product.id]">
+            <img [src]="product.image" [alt]="product.title" />
+            <span class="category-pill">{{ product.category }}</span>
+          </div>
+          <div class="product-meta">
+            <h4>{{ product.title }}</h4>
+            <p>$ {{ product.price }}</p>
+          </div>
+          <div class="rating" *ngIf="product.rating">
+            <span class="rating-value">{{ product.rating.rate }}</span>
+            <span class="stars">
+              <span
+                class="star"
+                *ngFor="let star of getStars(product.rating.rate)"
+                [class.filled]="star <= product.rating.rate"
+                >★</span
+              >
+            </span>
+            <span class="rating-count">({{ product.rating.count }})</span>
+          </div>
+          <div class="card-actions">
+            <button
+              class="icon-btn"
+              type="button"
+              [class.active]="isFavorite(product.id)"
+              (click)="toggleFavorite(product.id)"
+              aria-label="Toggle favorite"
+            >
+              ♥
+            </button>
+            <button
+              class="btn dark"
+              type="button"
+              (click)="addToCart(product.id)"
+            >
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <ng-template #loadingTpl>
+        <div class="grid-3">
+          <div class="card product-card loading" *ngFor="let _ of [1,2,3,4,5,6]">
+            <div class="product-thumb"></div>
+            <h4>Loading...</h4>
+            <p>--</p>
+            <span class="pill">Please wait</span>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</section>

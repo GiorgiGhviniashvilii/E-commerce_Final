@@ -1,0 +1,160 @@
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="badge">New collection</span>
+      <h1>Modern essentials for your everyday moments.</h1>
+      <p>
+        Discover curated pieces designed to elevate your space. Minimal,
+        refined, and crafted for a calm lifestyle.
+      </p>
+      <div class="hero-actions">
+        <button class="btn primary">Shop now</button>
+        <button class="btn ghost">Explore lookbook</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <h3>12k+</h3>
+          <span>Happy customers</span>
+        </div>
+        <div>
+          <h3>350+</h3>
+          <span>Exclusive products</span>
+        </div>
+        <div>
+          <h3>24/7</h3>
+          <span>Premium support</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <span class="pill">Trending</span>
+        <h4>Soft Lounge Chair</h4>
+        <p>$189.00</p>
+        <button class="btn dark">Add to cart</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Shop by category</h2>
+      <span class="pill">Updated weekly</span>
+    </div>
+    <div class="grid-4">
+      <div class="card category-card">
+        <h4>Living room</h4>
+        <p>12 products</p>
+      </div>
+      <div class="card category-card">
+        <h4>Kitchen</h4>
+        <p>18 products</p>
+      </div>
+      <div class="card category-card">
+        <h4>Workspace</h4>
+        <p>9 products</p>
+      </div>
+      <div class="card category-card">
+        <h4>Outdoor</h4>
+        <p>14 products</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Featured products</h2>
+      <a routerLink="/shop" class="pill">View all</a>
+    </div>
+    <div class="grid-4" *ngIf="featuredProducts$ | async as products; else loadingTpl">
+      <div class="card product-card" *ngFor="let product of products">
+        <div class="product-image" [routerLink]="['/product', product.id]">
+          <img [src]="product.image" [alt]="product.title" />
+          <span class="category-pill">{{ product.category }}</span>
+        </div>
+        <div class="product-info">
+          <h4>{{ product.title }}</h4>
+          <span>$ {{ product.price }}</span>
+        </div>
+        <div class="rating" *ngIf="product.rating">
+          <span class="rating-value">{{ product.rating.rate }}</span>
+          <span class="stars">
+            <span
+              class="star"
+              *ngFor="let star of getStars(product.rating.rate)"
+              [class.filled]="star <= product.rating.rate"
+              >★</span
+            >
+          </span>
+          <span class="rating-count">({{ product.rating.count }})</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #loadingTpl>
+      <div class="grid-4">
+        <div class="card product-card loading" *ngFor="let _ of [1,2,3,4]">
+          <div class="product-image"></div>
+          <div class="product-info">
+            <h4>Loading...</h4>
+            <span>--</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<section class="section promo">
+  <div class="container promo-grid">
+    <div>
+      <span class="badge">Member perks</span>
+      <h2>Join our loyalty club for 15% off your first order.</h2>
+      <p>
+        Exclusive drops, early access, and curated guides. Earn points with
+        every purchase.
+      </p>
+      <button class="btn dark">Become a member</button>
+    </div>
+    <div class="promo-card">
+      <h3>Next day delivery</h3>
+      <p>Free shipping for orders over $150.</p>
+      <div class="promo-pill">Express</div>
+    </div>
+  </div>
+</section>
+
+<section class="section reviews">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our happy customers</h2>
+      <div class="review-controls">
+        <button class="icon-btn" type="button" (click)="prevReview()">‹</button>
+        <button class="icon-btn" type="button" (click)="nextReview()">›</button>
+      </div>
+    </div>
+    <div class="review-row">
+      <div class="card review-card" *ngFor="let review of getVisibleReviews()">
+        <div class="review-top">
+          <div class="avatar">{{ review.name.charAt(0) }}</div>
+          <div>
+            <strong>{{ review.name }}</strong>
+            <p class="muted small">{{ review.title }}</p>
+          </div>
+        </div>
+        <div class="rating">
+          <span
+            class="star"
+            *ngFor="let star of getStars(review.rating)"
+            [class.filled]="star <= review.rating"
+            >★</span
+          >
+        </div>
+        <p class="review-body">{{ review.body }}</p>
+      </div>
+    </div>
+  </div>
+</section>
